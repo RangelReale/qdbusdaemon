@@ -7,7 +7,7 @@
 namespace QDBusDaemon
 {
 
-class Base
+class Base : public QObject
 {
     Q_OBJECT
 public:
