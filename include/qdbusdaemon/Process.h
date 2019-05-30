@@ -1,19 +1,19 @@
-#ifndef H__QDBUSDAEMON_DAEMON__H
-#define H__QDBUSDAEMON_DAEMON__H
+#ifndef H__QDBUSDAEMON_PROCESS__H
+#define H__QDBUSDAEMON_PROCESS__H
 
-#include <qdbusdaemon/qdbusdaemon.h>
+#include <qdbusdaemon/Base.h>
 
 #include <QProcess>
 
 namespace QDBusDaemon
 {
 
-class Daemon : public QDBusDaemon
+class Process : public Base
 {
     Q_OBJECT
 public:
-    Daemon();
-    ~Daemon();
+    Process();
+    ~Process();
 
     bool isConnected();
     QString address() const;
@@ -26,4 +26,4 @@ private:
 
 }
 
-#endif // H__QDBUSDAEMON_DAEMON__H
+#endif // H__QDBUSDAEMON_PROCESS__H

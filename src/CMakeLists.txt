@@ -1,13 +1,13 @@
 find_package(Qt4 REQUIRED QtDBus)
 
 SET(SRCS
-	qdbusdaemon.cpp
-	daemon.cpp
+	Base.cpp
+	Process.cpp
 )
 
 SET(INCS
-	../include/qdbusdaemon/qdbusdaemon.h
-	../include/qdbusdaemon/daemon.h
+	../include/qdbusdaemon/Base.h
+	../include/qdbusdaemon/Process.h
 )
 
 #	add_definitions(-DMILEVERSION_IMPL_WIN32)

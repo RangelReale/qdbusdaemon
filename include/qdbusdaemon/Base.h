@@ -1,5 +1,5 @@
-#ifndef H__QDBUSDAEMON_QDBUSDAEMON__H
-#define H__QDBUSDAEMON_QDBUSDAEMON__H
+#ifndef H__QDBUSDAEMON_BASE__H
+#define H__QDBUSDAEMON_BASE__H
 
 #include <QObject>
 #include <QProcess>
@@ -7,11 +7,11 @@
 namespace QDBusDaemon
 {
 
-class QDBusDaemon
+class Base
 {
     Q_OBJECT
 public:
-    virtual ~QDBusDaemon() {}
+    virtual ~Base() {}
 
     virtual bool isConnected() = 0;
     virtual QString address() const = 0;
@@ -27,4 +27,4 @@ Q_SIGNALS:
 
 }
 
-#endif // H__QDBUSDAEMON_QDBUSDAEMON__H
+#endif // H__QDBUSDAEMON_BASE__H
