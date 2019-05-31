@@ -11,6 +11,7 @@ class Base : public QObject
 {
     Q_OBJECT
 public:
+    Base(QObject *parent) : QObject(parent) {}
     virtual ~Base() {}
 
     virtual bool isConnected() = 0;
@@ -19,6 +20,8 @@ public Q_SLOTS:
     virtual void start() = 0;
     virtual void stop() = 0;
 Q_SIGNALS:
+    void error(QString message);
+    void restarting();
     void started();
     void connected();
     void disconnected();

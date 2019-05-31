@@ -12,7 +12,7 @@ class Process : public Base
 {
     Q_OBJECT
 public:
-    Process();
+    Process(QObject *parent=0);
     ~Process();
 
     bool isConnected();
@@ -26,9 +26,12 @@ public Q_SLOTS:
     void start();
     void stop();
 private:
+    bool _started;
+    bool _connected;
     QProcess *_process;
     QString _executable;
     QStringList _executableParams;
+    QString _address;
 private Q_SLOTS:
     void processError(QProcess::ProcessError error);
     void processStarted();
