@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QProcess>
+#include <QStringList>
 
 namespace QDBusDaemon
 {
@@ -14,8 +15,12 @@ public:
     Base(QObject *parent) : QObject(parent) {}
     virtual ~Base() {}
 
+    virtual bool isStarted() = 0;
     virtual bool isConnected() = 0;
+    virtual Q_PID pid() const = 0;
     virtual QString address() const = 0;
+
+    virtual QStringList environmentVariables();
 public Q_SLOTS:
     virtual void start() = 0;
     virtual void stop() = 0;

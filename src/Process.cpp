@@ -15,9 +15,23 @@ Process::~Process()
 
 }
 
+bool Process::isStarted()
+{
+    return _started;
+}
+
 bool Process::isConnected()
 {
     return _connected;
+}
+
+Q_PID Process::pid() const
+{
+    if (_process)
+    {
+        return _process->pid();
+    }
+    return 0;
 }
 
 QString Process::address() const

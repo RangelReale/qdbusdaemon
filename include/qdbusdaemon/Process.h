@@ -15,7 +15,9 @@ public:
     Process(QObject *parent=0);
     ~Process();
 
+    bool isStarted();
     bool isConnected();
+    Q_PID pid() const;
     QString address() const;
 
     const QString &executable() const;
