@@ -12,7 +12,11 @@ Process::Process(QObject *parent) :
 
 Process::~Process()
 {
-
+    if (_process)
+    {
+        stop();
+        _process->waitForFinished();
+    }
 }
 
 bool Process::isStarted()
@@ -150,6 +154,7 @@ void Process::processReadyReadStandardOutput()
         if (_address.isEmpty())
         {
             _address = QString::fromLocal8Bit(_process->readAll().trimmed());
+            _connected = true;
             emit connected();
         }
     }
