@@ -17,8 +17,6 @@ add_executable(${TARGET_BASE_NAME}
 
 target_link_libraries(${TARGET_BASE_NAME}
 	qdbusdaemon${VQTVERSION_SUFFIX}
-	Qt4::QtGui
-	Qt4::QtDBus
 )
 
 if (VQTVERSION STREQUAL QT5)
