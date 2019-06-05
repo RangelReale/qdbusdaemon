@@ -11,11 +11,13 @@ SET( TARGET_BASE_NAME qdbusdaemon${VQTVERSION_SUFFIX} )
 SET(SRCS
 	Base.cpp
 	Process.cpp
+	Static.cpp
 )
 
 SET(INCS
 	../include/qdbusdaemon/Base.h
 	../include/qdbusdaemon/Process.h
+	../include/qdbusdaemon/Static.h
 )
 
 ADD_LIBRARY(${TARGET_BASE_NAME} STATIC ${SRCS} ${INCS} )

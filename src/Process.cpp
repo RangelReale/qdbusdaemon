@@ -4,10 +4,12 @@ namespace QDBusDaemon
 {
 
 Process::Process(QObject *parent) :
-    Base(parent), _started(false), _connected(false), _process(NULL),
+    Base(parent), _started(false), _connected(false), _connecttimeout(2000), _process(NULL),
     _executable("dbus-daemon"), _executableParams()
 {
-
+    _connecttimer.setInterval(_connecttimeout);
+    _connecttimer.setSingleShot(true);
+    connect(&_connecttimer, SIGNAL(timeout()), this, SLOT(processTimeout()));
 }
 
 Process::~Process()
@@ -58,6 +60,17 @@ QStringList &Process::executableParams()
     return _executableParams;
 }
 
+int Process::connectTimeout() const
+{
+    return _connecttimeout;
+}
+
+void Process::setConnectTimeout(int value)
+{
+    _connecttimeout = value;
+    _connecttimer.setInterval(value);
+}
+
 void Process::start()
 {
     if (!_started)
@@ -74,10 +87,18 @@ void Process::start()
         connect(_process, SIGNAL(readyReadStandardOutput()), this, SLOT(processReadyReadStandardOutput()));
 
         QStringList params;
-        params << "--session" << "--nofork" << "--print-address";
+        params
+            << "--session"
+            << "--nofork"
+            << "--print-address";
         params.append(_executableParams);
 
         _started = true;
+
+        if (_connecttimeout > 0)
+        {
+            _connecttimer.start();
+        }
         _process->start(_executable, params);
     }
 }
@@ -86,6 +107,7 @@ void Process::stop()
 {
     if (_started)
     {
+        _connecttimer.stop();
         _started = false;
         _process->terminate();
     }
@@ -93,6 +115,8 @@ void Process::stop()
 
 void Process::processError(QProcess::ProcessError err)
 {
+    _connecttimer.stop();
+
     QString errorMessage("DBD process error");
     switch (err) {
     case QProcess::ProcessError::FailedToStart: errorMessage += ": Failed to start"; break;
@@ -116,6 +140,7 @@ void Process::processStarted()
 
 void Process::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
+    _connecttimer.stop();
     if (_connected)
     {
         _connected = false;
@@ -143,7 +168,7 @@ void Process::processReadyReadStandardError()
 {
     if (_started)
     {
-        emit error(QString("DBD error output: %1").arg(QString::fromLocal8Bit(_process->readAll())));
+        emit error(QString("DBus daemon error output: %1").arg(QString::fromLocal8Bit(_process->readAllStandardError())));
     }
 }
 
@@ -153,10 +178,20 @@ void Process::processReadyReadStandardOutput()
     {
         if (_address.isEmpty())
         {
-            _address = QString::fromLocal8Bit(_process->readAll().trimmed());
+            _address = QString::fromLocal8Bit(_process->readAllStandardOutput().trimmed());
             _connected = true;
+            _connecttimer.stop();
             emit connected();
         }
+    }
+}
+
+void Process::processTimeout()
+{
+    if (_process)
+    {
+        emit error(QString("Process connect timeout"));
+        _process->kill();
     }
 }
 

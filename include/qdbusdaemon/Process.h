@@ -4,6 +4,7 @@
 #include <qdbusdaemon/Base.h>
 
 #include <QProcess>
+#include <QTimer>
 
 namespace QDBusDaemon
 {
@@ -24,17 +25,23 @@ public:
     void setExecutable(const QString &value);
 
     QStringList &executableParams();
+
+    int connectTimeout() const;
+    void setConnectTimeout(int value);
 public Q_SLOTS:
     void start();
     void stop();
 private:
     bool _started;
     bool _connected;
+    int _connecttimeout;
     QProcess *_process;
     QString _executable;
     QStringList _executableParams;
     QString _address;
+    QTimer _connecttimer;
 private Q_SLOTS:
+    void processTimeout();
     void processError(QProcess::ProcessError error);
     void processStarted();
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
